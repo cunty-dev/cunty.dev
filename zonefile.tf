@@ -1,4 +1,10 @@
 terraform {
+  backend "remote" {
+    organization = "cloud84"
+    workspaces {
+      name = "cunty-dev"
+    }
+  }
   required_providers {
     google = {
       source = "hashicorp/google"
