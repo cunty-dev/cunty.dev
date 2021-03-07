@@ -31,11 +31,51 @@ resource "google_dns_managed_zone" "cunty" {
   description = "There is only one@cunty.dev"
 }
 
-# !! The provider treats this resource as an authoritative record set. 
-# This means existing records (including the default records) for 
-# the given type will be overwritten when you create this resource 
-# in Terraform. In addition, the Google Cloud DNS API requires
-# NS records to be present at all times, so Terraform will not 
+# !?!
+#
+# The provider treats this resource ("google_dns_record_set")
+# as an authoritative record set. This means existing records
+# (including the default records) for the given type will be
+# overwritten when you create this resource in Terraform.
+# In addition, the Google Cloud DNS API requires
+# NS records to be present at all times, so Terraform will not
 # actually remove NS records during destroy but will report that it did.
-
+#
 # resource "google_dns_record_set" "..." {}
+
+# Fastmail email
+resource "google_dns_record_set" "mx" {
+  name         = google_dns_managed_zone.cunty.dns_name
+  managed_zone = google_dns_managed_zone.cunty.name
+  type         = "MX"
+  ttl          = 3600
+
+  rrdatas = [
+    "10 in1-smtp.messagingengine.com.",
+    "20 in2-smtp.messagingengine.com.",
+  ]
+}
+
+# Fastmail SPF (optional)
+resource "google_dns_record_set" "spf" {
+  name         = google_dns_managed_zone.cunty.dns_name
+  managed_zone = google_dns_managed_zone.cunty.name
+  type         = "TXT"
+  ttl          = 3600
+
+  # The quotes are part of the data, so must be escaped.
+  rrdatas = [
+    "\"v=spf1 include:spf.messagingengine.com ?all\"",
+  ]
+}
+
+# Fastmail DKIM (optional)
+resource "google_dns_record_set" "cname" {
+  count        = 3
+  name         = "fm${count.index + 1}._domainkey"
+  managed_zone = google_dns_managed_zone.cunty.name
+  type         = "CNAME"
+  ttl          = 3600
+
+  rrdatas = [ "fm${count.index + 1}.${google_dns_managed_zone.cunty.dns_name}dkim.fmhosted.com." ]
+}
