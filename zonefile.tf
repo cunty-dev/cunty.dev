@@ -72,7 +72,7 @@ resource "google_dns_record_set" "spf" {
 # Fastmail DKIM (optional)
 resource "google_dns_record_set" "cname" {
   count        = 3
-  name         = "fm${count.index + 1}._domainkey"
+  name         = "fm${count.index + 1}._domainkey.cunty.dev."
   managed_zone = google_dns_managed_zone.cunty.name
   type         = "CNAME"
   ttl          = 3600
