@@ -79,3 +79,13 @@ resource "google_dns_record_set" "cname" {
 
   rrdatas = [ "fm${count.index + 1}.${google_dns_managed_zone.cunty.dns_name}dkim.fmhosted.com." ]
 }
+
+# GitHub Verified Domain
+resource "google_dns_record_set" "www_cunty_dev_github_veri" {
+  name         = "_github-challenge-cunty-dev.www.cunty.dev."
+  managed_zone = google_dns_managed_zone.cunty.name
+  type         = "TXT"
+  ttl          = 3600
+
+  rrdatas = ["e2096a1681"]
+}
