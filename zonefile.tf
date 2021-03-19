@@ -89,3 +89,12 @@ resource "google_dns_record_set" "www_cunty_dev_github_veri" {
 
   rrdatas = ["e2096a1681"]
 }
+
+resource "google_dns_record_set" "cunty_dev_github_veri" {
+  name         = "_github-challenge-cunty-dev.cunty.dev."
+  managed_zone = google_dns_managed_zone.cunty.name
+  type         = "TXT"
+  ttl          = 3600
+
+  rrdatas = ["65215259de"]
+}
