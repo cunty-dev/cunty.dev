@@ -98,3 +98,28 @@ resource "google_dns_record_set" "cunty_dev_github_veri" {
 
   rrdatas = ["65215259de"]
 }
+
+# Point cunty.dev (apex domain) to GitHub Pages
+resource "google_dns_record_set" "apex_cunty_dev" {
+  name         = google_dns_managed_zone.cunty.dns_name
+  managed_zone = google_dns_managed_zone.cunty.name
+  type         = "A"
+  ttl          = 3600
+
+  rrdatas = [
+    "185.199.108.153",
+    "185.199.109.153",
+    "185.199.110.153",
+    "185.199.111.153",
+  ]
+}
+
+# Point www.cunty.dev to GitHub Pages
+resource "google_dns_record_set" "www_cunty_dev" {
+  name         = "www.${google_dns_managed_zone.cunty.dns_name}"
+  managed_zone = google_dns_managed_zone.cunty.name
+  type         = "CNAME"
+  ttl          = 3600
+
+  rrdatas = [ "cunty-dev.github.io." ]
+}
