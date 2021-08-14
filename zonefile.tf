@@ -123,3 +123,13 @@ resource "google_dns_record_set" "www_cunty_dev" {
 
   rrdatas = [ "cunty-dev.github.io." ]
 }
+
+# Verify cunty.dev for Google Cloud Identity
+resource "google_dns_record_set" "google_site_verification" {
+  name         = "google-site-verification"
+  managed_zone = google_dns_managed_zone.cunty.name
+  type         = "TXT"
+  ttl          = 3600
+
+  rrdatas = ["LPbtg2Y3GHUCV1D7-PYOcf7U0o3CNIIYk83BLYWWXtw"]
+}
